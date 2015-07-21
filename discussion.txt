@@ -1,0 +1,34 @@
+1. 
+2. When you call an address that doesn’t seem to exist the program exits and displays an Exception 14 at EIP=001004f2: Page fall on SAPC, on Unix: I get a segmentation fault. ***NEED MORE****
+3. after checking the memory address for xyz and pxyz I noticed a slight difference in the addresses:
+
+// this was for xyz
+PC-tutor> md 101e6c 
+Hey here is a text: 101e6c; 06 00 00 00 6c 1e 10 00 04 98 06 00 00 00 00 00 00 
+....l...........
+Reached mem_display, passed argument string: | 101e6c|
+        help message: Memory display: MD <addr>
+
+// this was for pxyz
+PC-tutor> md 101e70
+Hey here is a text: 101e70; 6c 1e 10 00 04 98 06 00 00 00 00 00 00 00 00 00 00 
+l...............
+Reached mem_display, passed argument string: | 101e70|
+        help message: Memory display: MD <addr>
+
+I noticed that the addresses both print the same thing but in slightly different order, and that’s because the pointer xyz points to the address (in little endian) that is xyz.
+
+3c. I found the address by incrementing through the cmds memory by 48 to get to where the little endian address resides for the s command. I changed the s to x and ran the code.
+
+4. the code resides near 0x100100-0x101e30 and Data resides below it in memory addresses: 0x101e6c-0x101ffc
+ON SAPC: it lists 4 columns with the categories: Index, value, size, type, bind, other, shndx, name
+
+5. On SAPC: program doesn’t actually crash, but commands stop working.
+   On Unix: Segmentation Fault
+
+6. ESP:000578a8; While trying to search through the pointers shown via mmd, I ran across some page fault crashes on SAPC
+When trying to find the registers on gdb I couldn’t produce a result that would show registers being used. When using the run command in gdb it wouldn’t allow me to use “i reg” 
+
+7. I modified the code in the .opc file before realizing I wasn’t supposed to do that. I also found a strange table by nm tutor.lnx on SAPC which brought me to a 4 column list
+
+8. I learned about pointers and their role in memory addresses. This was also the hardest part of the assignment along with learning to download the tutor.lnx on space. It was definitely worth my time. I can always refer to this project to understand memory locations and symbol tables. The most interesting was that I could change the commands within the program while running the program. I was so sure that it would crash and it didn’t on SAPC.
